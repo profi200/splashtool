@@ -162,14 +162,18 @@ bool pngToSplash(u32 flags, const char *const inFile, const char *const outFile)
 		{
 			splash.resize(size + sizeof(SplashHeader));
 			memcpy(splash.data() + sizeof(SplashHeader), tmp, size);
-
-			free(tmp);
 		}
 		else
 		{
-			fprintf(stderr, "Failed to compress data. Falling back to no compression...\n");
+			if(tmp)
+				fprintf(stderr, "Compression doesn't decrease size.\n");
+			else
+				fprintf(stderr, "Failed to compress data.\n");
+			fprintf(stderr, " Disabling compression...\n");
 			flags &= ~FLAG_COMPRESSED;
 		}
+
+		free(tmp);
 	}
 
 	header.flags = flags;
