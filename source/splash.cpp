@@ -158,7 +158,7 @@ bool pngToSplash(u32 flags, const char *const inFile, const char *const outFile)
 	{
 		size_t size = 0;
 		void *tmp = lz11_encode(splash.data() + sizeof(SplashHeader), splash.size() - sizeof(SplashHeader), &size);
-		if(tmp && size - 5 < splash.size() - sizeof(SplashHeader))
+		if(tmp && size > 5 && size - 5 < splash.size() - sizeof(SplashHeader))
 		{
 			splash.resize(size + sizeof(SplashHeader) - 5);
 			memcpy(splash.data() + sizeof(SplashHeader), (u8*)tmp + 5, size - 5);
