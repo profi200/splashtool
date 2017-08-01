@@ -80,12 +80,12 @@ int main(int argc, char **argv)
 	}
 	catch(const std::exception& e)
 	{
-		printf("An exception occured: what(): '%s'\n", e.what());
+		fprintf(stderr, "An exception occured: what(): '%s'\n", e.what());
 		res = 2;
 	}
 	catch(...)
 	{
-		printf("Unknown exception. Exiting...\n");
+		fprintf(stderr, "Unknown exception. Exiting...\n");
 		res = 3;
 	}
 
