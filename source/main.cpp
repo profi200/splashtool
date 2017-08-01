@@ -72,5 +72,5 @@ int main(int argc, char **argv)
 		flags &= ~FORMAT_INVALID;
 	}
 
-	return (int)pngToSplash(flags, inFile, outFile);
+	return (pngToSplash(flags, inFile, outFile) ? 0 : 1);
 }
