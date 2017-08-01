@@ -1,6 +1,7 @@
 #include <argp.h>
 #include <cstdio>
 #include <cstring>
+#include <exception>
 #include "types.h"
 #include "splash.h"
 
@@ -72,5 +73,21 @@ int main(int argc, char **argv)
 		flags &= ~FORMAT_INVALID;
 	}
 
-	return (pngToSplash(flags, inFile, outFile) ? 0 : 1);
+	int res;
+	try
+	{
+		res = (pngToSplash(flags, inFile, outFile) ? 0 : 1);
+	}
+	catch(const std::exception& e)
+	{
+		printf("An exception occured: what(): '%s'\n", e.what());
+		res = 2;
+	}
+	catch(...)
+	{
+		printf("Unknown exception. Exiting...\n");
+		res = 3;
+	}
+
+	return res;
 }
