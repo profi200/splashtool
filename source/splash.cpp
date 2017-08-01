@@ -113,8 +113,8 @@ bool pngToSplash(u32 flags, const char *const inFile, const char *const outFile)
 
 	/*if(flags & FLAG_ROTATED)
 	{
-		header.width = height;
-		header.height = width;
+		header.width = height & 0xFFFFu;
+		header.height = width & 0xFFFFu;
 		rotate(rgba, width, height);
 	}
 	else
@@ -142,7 +142,11 @@ bool pngToSplash(u32 flags, const char *const inFile, const char *const outFile)
 	{
 		size_t size = 0;
 		void *tmp = lz11_encode(splash.data() + sizeof(SplashHeader), splash.size() - sizeof(SplashHeader), &size);
-		if(!tmp || size > splash.size() - sizeof(SplashHeader)) return false;
+		if(!tmp || size > splash.size() - sizeof(SplashHeader))
+		{
+			fprintf(stderr, "Failed to compress data.\n");
+			return false;
+		}
 
 		memcpy(splash.data() + sizeof(SplashHeader), tmp, size);
 		splash.resize(size + sizeof(SplashHeader));
