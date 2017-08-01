@@ -10,7 +10,7 @@ static const char *inFile = nullptr;
 static const char *outFile = nullptr;
 
 
-const char *argp_program_version = "splashtool " VERS_STRING;
+const char *argp_program_version = "splashtool " VER_STRING;
 static const char *doc           = "A tool to create splashscreen files";
 
 static const struct argp_option options[] =
