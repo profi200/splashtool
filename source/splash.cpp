@@ -8,10 +8,27 @@
 
 
 
-/*static void rotate(std::vector<u8>& splash, u16 width, u16 height)
+// Thanks mtheall
+static void rotate(std::vector<u8>& splash, u16 width, u16 height)
 {
-	u8 *data = splash.data() + sizeof(SplashHeader);
-}*/
+	std::vector<u8> tmp;
+	tmp.swap(splash);
+	splash.resize(tmp.size());
+
+	const u8 * const src = tmp.data() + sizeof(SplashHeader);
+	u8 *dst = splash.data() + sizeof(SplashHeader);
+
+	for(size_t col = 0; col < width; ++col)
+	{
+		for(size_t row = 0; row < height; ++row)
+		{
+			*dst++ = src[(height-row)*width + col + 0];
+			*dst++ = src[(height-row)*width + col + 1];
+			*dst++ = src[(height-row)*width + col + 2];
+			*dst++ = src[(height-row)*width + col + 3];
+		}
+	}
+}
 
 static void rgba8ToRgb565(std::vector<u8>& splash, u16 width, u16 height, bool swap)
 {
@@ -109,20 +126,18 @@ bool pngToSplash(u32 flags, const char *const inFile, const char *const outFile)
 
 	SplashHeader header;
 	memcpy(&header.magic, "SPLA", 4);
-	header.flags = flags;
 
-	/*if(flags & FLAG_ROTATED)
+	if(flags & FLAG_ROTATED)
 	{
 		header.width = height & 0xFFFFu;
 		header.height = width & 0xFFFFu;
-		rotate(rgba, width, height);
+		rotate(splash, width, height);
 	}
 	else
-	{*/
+	{
 		header.width = width & 0xFFFFu;
 		header.height = height & 0xFFFFu;
-	//}
-	memcpy(splash.data(), &header, sizeof(SplashHeader));
+	}
 
 	switch(flags & FORMAT_INVALID)
 	{
@@ -142,17 +157,22 @@ bool pngToSplash(u32 flags, const char *const inFile, const char *const outFile)
 	{
 		size_t size = 0;
 		void *tmp = lz11_encode(splash.data() + sizeof(SplashHeader), splash.size() - sizeof(SplashHeader), &size);
-		if(!tmp || size > splash.size() - sizeof(SplashHeader))
+		if(tmp && size < splash.size() - sizeof(SplashHeader))
 		{
-			fprintf(stderr, "Failed to compress data.\n");
-			return false;
+			splash.resize(size + sizeof(SplashHeader));
+			memcpy(splash.data() + sizeof(SplashHeader), tmp, size);
+
+			free(tmp);
 		}
-
-		memcpy(splash.data() + sizeof(SplashHeader), tmp, size);
-		splash.resize(size + sizeof(SplashHeader));
-
-		free(tmp);
+		else
+		{
+			fprintf(stderr, "Failed to compress data. Falling back to no compression...\n");
+			flags &= ~FLAG_COMPRESSED;
+		}
 	}
+
+	header.flags = flags;
+	memcpy(splash.data(), &header, sizeof(SplashHeader));
 
 	return vectorToFile(splash, outFile);
 }
