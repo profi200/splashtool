@@ -22,10 +22,11 @@ static void rotate(std::vector<u8>& splash, u16 width, u16 height)
 	{
 		for(size_t row = 0; row < height; ++row)
 		{
-			*dst++ = src[(height-row)*width + col + 0];
-			*dst++ = src[(height-row)*width + col + 1];
-			*dst++ = src[(height-row)*width + col + 2];
-			*dst++ = src[(height-row)*width + col + 3];
+			const u8 *p = &src[((height-row)*width + col)*4];
+			*dst++ = *p++;
+			*dst++ = *p++;
+			*dst++ = *p++;
+			*dst++ = *p++;
 		}
 	}
 }
