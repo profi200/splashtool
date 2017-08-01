@@ -161,7 +161,7 @@ bool pngToSplash(u32 flags, const char *const inFile, const char *const outFile)
 		if(tmp && size < splash.size() - sizeof(SplashHeader))
 		{
 			splash.resize(size + sizeof(SplashHeader));
-			memcpy(splash.data() + sizeof(SplashHeader), (u8*)tmp + 5, size);
+			memcpy(splash.data() + sizeof(SplashHeader), (u8*)tmp + 5, size - 5);
 		}
 		else
 		{
