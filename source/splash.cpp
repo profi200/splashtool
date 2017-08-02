@@ -127,18 +127,10 @@ bool pngToSplash(u32 flags, const char *const inFile, const char *const outFile)
 
 	SplashHeader header;
 	memcpy(&header.magic, "SPLA", 4);
+	header.width = width & 0xFFFFu;
+	header.height = height & 0xFFFFu;
 
-	if(flags & FLAG_ROTATED)
-	{
-		header.width = height & 0xFFFFu;
-		header.height = width & 0xFFFFu;
-		rotate(splash, width, height);
-	}
-	else
-	{
-		header.width = width & 0xFFFFu;
-		header.height = height & 0xFFFFu;
-	}
+	if(flags & FLAG_ROTATED) rotate(splash, width, height);
 
 	switch(flags & FORMAT_INVALID)
 	{
