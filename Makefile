@@ -71,9 +71,9 @@ VERS_STRING := $(shell git describe --tags --match v[0-9]* --abbrev=8 | sed 's/-
 VERS_MAJOR  := $(shell echo "$(VERS_STRING)" | sed 's/v\([0-9]*\)\..*/\1/i')
 VERS_MINOR  := $(shell echo "$(VERS_STRING)" | sed 's/.*\.\([0-9]*\).*/\1/')
 
-DEFINES += -DVER_STRING=\"$(VERS_STRING)\"
-DEFINES += -DVER_MAJOR=$(shell echo "$(VERS_STRING)" | sed 's/v\([0-9]*\)\..*/\1/i')
-DEFINES += -DVER_MINOR=$(shell echo "$(VERS_STRING)" | sed 's/.*\.\([0-9]*\).*/\1/')
+DEFINES += -DVERS_STRING=\"$(VERS_STRING)\"
+DEFINES += -DVERS_MAJOR=$(shell echo "$(VERS_STRING)" | sed 's/v\([0-9]*\)\..*/\1/i')
+DEFINES += -DVERS_MINOR=$(shell echo "$(VERS_STRING)" | sed 's/.*\.\([0-9]*\).*/\1/')
 
 
 # Main target
