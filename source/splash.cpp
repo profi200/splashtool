@@ -42,13 +42,9 @@ static void rgba8ToRgb565(std::vector<u8>& splash, u16 width, u16 height, bool s
 		u8 b = data[i + 2];
 		u8 a = data[i + 3];
 
-		r = 1.0f * r * a / 255.0f;
-		g = 1.0f * g * a / 255.0f;
-		b = 1.0f * b * a / 255.0f;
-
-		r = r >> 3;
-		g = g >> 2;
-		b = b >> 3;
+		r = (r * a / 255) >> 3;
+		g = (g * a / 255) >> 2;
+		b = (b * a / 255) >> 3;
 
 		u16 pixel;
 		if(swap) pixel = (b << 11) | (g << 5) | r;
@@ -58,7 +54,7 @@ static void rgba8ToRgb565(std::vector<u8>& splash, u16 width, u16 height, bool s
 		data[i / 2 + 1] = pixel>>8;
 	}
 
-	splash.resize(width * height * 2);
+	splash.resize(width * height * 2 + sizeof(SplashHeader));
 }
 
 static void rgba8ToRgb8(std::vector<u8>& splash, u16 width, u16 height, bool swap)
@@ -72,9 +68,9 @@ static void rgba8ToRgb8(std::vector<u8>& splash, u16 width, u16 height, bool swa
 		u8 b = data[i + 2];
 		u8 a = data[i + 3];
 
-		r = 1.0f * r * a / 255.0f;
-		g = 1.0f * g * a / 255.0f;
-		b = 1.0f * b * a / 255.0f;
+		r = r * a / 255;
+		g = g * a / 255;
+		b = b * a / 255;
 
 		u32 pixel;
 		if(swap) pixel = (r << 16) | (g << 8) | b;
@@ -85,7 +81,7 @@ static void rgba8ToRgb8(std::vector<u8>& splash, u16 width, u16 height, bool swa
 		data[i / 4 * 3 + 2] = pixel>>16;
 	}
 
-	splash.resize(width * height * 3);
+	splash.resize(width * height * 3 + sizeof(SplashHeader));
 }
 
 static void swapRgba(std::vector<u8>& splash, u16 width, u16 height)
