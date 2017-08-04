@@ -1,5 +1,4 @@
 #include <cstdio>
-#include <cstdlib>
 #include <cstring>
 #include <exception>
 #include <getopt.h>
@@ -7,19 +6,20 @@
 #include "splash.h"
 
 
+static const char *const versionStr = "splashtool " VERS_STRING;
+
+
 
 static void help(void)
 {
-	printf("splashtool " VERS_STRING " by profi200\n"
+	printf("%s by profi200\n"
 	        "Usage: splashtool [OPTION...] [in png file] [out splash file]\n\n"
 	        "  -f --format=format   Format. Can be RGB565, RGB8 or RGBA8\n"
 	        "  -c --nocompress      Optional. Do not compress data\n"
 	        "  -r --rotate          Optional. Rotate 90 degrees CW\n"
 	        "  -s --swap            Optional. Swap color components\n"
 	        "  -h --help            Give this help list\n"
-	        "  -v --version         Print program version\n\n");
-
-	exit(1);
+	        "  -v --version         Print program version\n\n", versionStr);
 }
 
 int main(int argc, char *const argv[])
@@ -47,7 +47,11 @@ int main(int argc, char *const argv[])
 				if(!strncmp(optarg, "RGB565", 6)) flags |= FORMAT_RGB565;
 				else if(!strncmp(optarg, "RGB8", 4)) flags |= FORMAT_RGB8;
 				else if(!strncmp(optarg, "RGBA8", 5)) flags |= FORMAT_RGBA8;
-				else help();
+				else
+				{
+					help();
+					return 1;
+				}
 				break;
 			case 'c':
 				flags = flags & ~FLAG_COMPRESSED;
@@ -60,18 +64,24 @@ int main(int argc, char *const argv[])
 				break;
 			case 'h':
 				help();
+				return 0;
 				break;
 			case 'v':
-				printf("splashtool " VERS_STRING "\n");
-				exit(0);
+				puts(versionStr);
+				return 0;
 				break;
 			case '?':
 			default:
 				help();
+				return 1;
 		}
 	}
 
-	if(argc - optind < 2 || argc - optind > 2) help();
+	if(argc - optind < 2 || argc - optind > 2)
+	{
+		help();
+		return 1;
+	}
 	const char *inFile = argv[optind];
 	const char *outFile = argv[optind + 1];
 
