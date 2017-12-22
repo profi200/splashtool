@@ -10,6 +10,7 @@ To compile just type `make`.
 You may use this under the terms of the GNU General Public License GPL v3 or under the terms of any later revisions of the GPL. Refer to the provided `LICENSE.txt` file for further information.
 
 ## Thanks to...
+* **lvandeve** (lodepng)
 * **mtheall** (tex3ds)
 * **devkitPro** (makefile based on one provided by devkitPro)
 * ...everyone who contributed to **3dbrew.org**
